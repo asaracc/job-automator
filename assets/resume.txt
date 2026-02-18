@@ -1,0 +1,247 @@
+# Assets: Your base resume text for AI context
+Açaoy Saracchini
+EU Citizen
+Mobile: +1 (647) 614 7455
+E-mail: saracchini.a@gmail.com
+Professional Experience
+Profile
+Fueled by my unwavering passion for technology, I embarked on my career as a SQL Server
+Developer, specializing in T-SQL. In this role, I not only honed my skills in a variety of tasks but
+also perpetually sought out innovation. To streamline and elevate my work, I immersed
+myself in languages such as C#, Java, and Python, employing them for automation purposes.
+Automation has been an intrinsic component of my journey from the very outset.
+As my experience expanded, I had the privilege of engaging directly with clients, translating
+their concerns into technical languages, and automating intricate processes. This newfound
+responsibility empowered me to take the helm of end-to-end development, where I tackled
+challenges associated with database performance, data modelling, and the creation of robust
+Data Warehouse solutions. While managing substantial volumes of data, I placed a premium
+on reliability and incorporated fail-safe measures into my solutions.
+These experiences have not only refined my technical expertise but have also fortified my
+ability to bridge the divide between clients and technical implementations. I am perpetually
+motivated to deliver innovative and efficient solutions that assuage client concerns while
+upholding the highest standards of database management.
+Accomplishments
+ Participated in the medical records assessment project, working for health insurance
+companies in Brazil. Assessed whether hospitals were correctly utilizing materials and
+medications in procedures and ensuring accurate billing to health insurance providers.
+ Conducted thorough Requirements Analysis and spearheaded the development of
+integration systems within the parking business, resulting in an impressive 85%
+reduction in overtime costs. This achievement facilitated a series of other significant
+enhancements within the company, including the successful implementation of e-
+wallet technology and seamless integration with monitoring systems for rotating
+parking lots, leading to a remarkable 100% increase in the volume of notifications and
+assessments for irregular vehicles.
+ Conducted rigorous Requirements Analysis and spearheaded the development of a
+comprehensive system integration project, defining the architectural framework for the
+solution. This initiative extended to diverse sectors, including retail, freight control,
+replenishments, product importing, and unification of item registries, all while
+collaborating with a multicultural and remote team.
+ He successfully orchestrated the implementation of payment systems within
+strategically vital parking facilities, including prestigious universities and major airports
+across Brazil. This achievement enabled seamless integration with various other
+systems developed or acquired by the company, further enhancing operational
+efficiency and customer satisfaction.
+Main Skills
+ Performance Tuning and Optimization in Microsoft SQL Server 2012, 2014 and 2016
+ Data modelling
+ Systems Integration using SSIS and DTS
+ ETL and ELT process using SSIS and T-SQL code in very large databases.
+ SQL Server Internals
+ Extended knowledge in Index and statistics features
+ Troubleshooting from the application to the storage to find the root cause.
+ Troubleshooting on T-SQL complex queries and SQL Server Environment
+ Technical design and coding of new features and components such as Procedures,
+Triggers and Views
+ Knowledge of SQL Server 2017 and 2019
+ Database Administration on Microsoft SQL Server 2008, 2012, 2014 and 2016
+environments
+Related Skills
+ Management of mission-critical production database.
+ Backup and restore.
+ Analyses and Development of Data Integration Solutions in Large Databases.
+ Maintenance and enhancement of existing features.
+ Change requests and bug fixes for existing objects in production.
+ Database Analysis and Development on Microsoft SQL Server 2000, 2005, 2008, 2012,
+2014, 2016 and 2019
+ Querying and Analysis on Teradata Database and DB2 environment
+ Excel VBA, VB6, Batch and Python programming
+ Microsoft Azure SQL Database
+ Understand AWS, GCP and Azure Cloud environment.
+ Working in several kinds of businesses
+ Working directly with the customer
+ Always studying new technologies and understanding trends
+ Constant progress reports for managers
+ Solutions recommendations to goals the business requirements.
+ Reports using Microsoft PowerBI and Microsoft Excel
+ RUP, SCRUM, Agile, Use Case Point, Function Point Analysis and ITIL Methodology
+Employer History
+McKinsey 01/2024 – Current
+Data Engineer II
+Responsibilities:
+ Develop and deploy enhancements to the PriceMetrix data platform and database
+infrastructure.
+ Participate in the complete software development lifecycle as a member of an Agile
+team, translating business requirements into technical design and estimating
+development effort.
+ Apply current technology to evolve and scale the data platform to meet business
+needs.
+ Develop high-quality code that satisfies functional, performance, and scalability
+requirements, collaborating on the review and testing of code changes.
+ Create and maintain technical documentation.
+ Support the maintenance and enhancement of the data platform’s infrastructure,
+advising the development team on best practices for performance and scalability.
+ Collaborate with IT and platform operations teams to enable deployment,
+configuration, and troubleshooting.
+Key Achievements:
+ Optimized the physical aspects of RDBMS and gained knowledge of cloud and on-
+premise infrastructure.
+ Developed database solutions for analytics, especially using Microsoft SQL Server and
+Azure database services.
+ Applied DevOps practices, including automated deployment and testing.
+ Effectively collaborated in a team environment, demonstrating excellent
+communication skills.
+Technologies Used:
+ SQL Server 2019, Azure Services
+ Agile Methods (Scrum) using Jira
+ ETL/ELT Patterns with SSIS
+ DevOps Practices with GitHub Actions and PowerShell Script
+TVF Software 06/2023 – 12/2023
+Senior Data Engineer
+Customer: Farmacias Ahumada (part-time remotely)
+ Build data pipelines to load data into the Salesforce system.
+ Python + SQLAlchemy to extract information from Oracle 11.2 running on a
+Docker Container to send data to GCP - Cloud SQL.
+ Create a Google Cloud Run to execute a Docker Image to convert the data from Cloud
+SQL – PostgreSQL to XML files and save it on Google Cloud Storage, code is written in
+Python + Pandas + SQLAlchemy
+ Version control on GitHub
+Forma.AI 01/2022 – 06/2023
+Senior Data Engineer
+Full-time employee
+ Performance tuning in SQL Code and Postgres Database
+ Maintenance and improvement of proprietary software using Python and Django
+ Develop ETL and ELT processes using SQL, Python and PySpark in Databricks on AWS
+Cloud and using Pandas in containers on Docker solutions.
+ Translate business needs into requirements in driving solution designs.
+ Occasionally work on customer implementations or issues
+ Build data ingestion, write SQL queries, optimize queries, and process pipelines.
+ Communicate technical product issues with disciplines across multiple teams.
+IBM Brazil 10/2019 – 01/2022
+Lead Data Engineer
+Working in Itaú as a consultant, Itaú is the biggest Brazilian Bank.
+ Performance tuning in SQL Server T-SQL Code
+ Solutions recommendations to goals the business requirements.
+ Develop ETL and ELT processes using T-SQL and SSIS to ingest, clean and load in batch
+mode.
+ Create automation processes using Python.
+ Understand the business requirements and transformer on technical solutions,
+including data modelling, database sizing, and infrastructure definitions.
+Habib’s Group 07/2019 – 10/2019
+Database Administrator
+Working on an assessment to improve their SQL Server environment.
+ Database Instance migration to Azure using Log Shipping
+ SQL Server management and support, installation, setup, user access control
+ Perform Troubleshooting and Tuning on SQL Server T-SQL complex codes.
+ Constant environment reports for managers and CIO
+ Solutions recommendations to goals the business requirements.
+ Work together with the developer team to get a better solution for Dev and Data
+ Management of SQL Server Replication
+Randstad Brasil 04/2019 – 06/2019
+Database Consultant (Freelancer)
+Working on an assessment to improve their SQL Server environment.
+ Collect SQL Server Performance counters and understand the environment
+bottlenecks.
+ Report every performance issue and suggest how to fix it
+ Develop and deploy the solution to fix the bottlenecks situation.
+Hyperativa 08/2018 – 07/2019
+Database Developer and Administrator
+Full-time employee
+ SQL Server management and support, installation, setup, user access control
+ Perform tuning analysis in SQL Server Environment
+ Develop ETL process using SSIS Packages to ingest, clean and load in near real-time.
+ Database design for new business requirements
+ Troubleshooting and tuning on SQL Server T-SQL complex codes
+Estapar Estacionamentos 11/2013 – 12/2017
+Database Developer and Administrator
+Working as a consultant from TVF Tecnologia company
+ Migration from On-Premises to Data Center Providers
+ Analyze and write functional and technical specifications.
+ Provide technical support for deployed solutions.
+ Propose technical solutions.
+ Conduct proof of concepts
+ Identify and resolve technical problems.
+ Requirements Identifying for Integration Solution
+ Mapping and documenting database objects and database environment
+ SQL Server Objects development as procedures, functions, triggers and views
+ Integration systems development via T-SQL complex codes and Microsoft SSIS
+ Perform Troubleshooting and Tuning on SQL Server T-SQL complex codes.
+ Perform Troubleshooting on SQL Server 2008/2012/2014 environment.
+ Deploy and maintenance of Microsoft Azure SQL Database (Cloud Database)
+Walmart Brasil 07/2008 – 10/2013
+Software Analyst and Database Developer
+Working as a consult from CWI Software Company
+ Upgrade, configure and debug existing systems.
+ Analyze and write functional and technical specifications.
+ Provide technical support for deployed solutions.
+ Propose technical solutions in line with the integration team.
+ Perform unit testing and quality assurance.
+ Identify and resolve technical problems.
+ Requirements Identifying for Integration Solution
+ SQL Server Objects development as procedures, functions, triggers, and views
+ Integration systems development via T-SQL complex codes
+ Perform Troubleshooting and Tuning on SQL Server T-SQL complex codes.
+Tempo Participações S/A SQL Server Developer
+Full-time employee
+08/2005 – 07/2008
+ SQL Server Objects development as procedures, functions, triggers, and views
+ Structure development for Business Intelligence
+ Perform unit testing and quality assurance.
+ Identify and resolve technical problems.
+Certifications
+GCP – Professional Data Engineer Validation Number: WM5RVW3CN1R4QLKL
+10/2020 - Expired
+AWS Certified Big Data - Specialty Validation Number: WM5RVW3CN1R4QLKL
+06/2020 - Expired
+Microsoft Certified: Azure Database Administrator Associate
+04/2020
+Certification Number: H488-6704
+Microsoft Certified: Azure Fundamental 02/2020
+Certification Number: H360-5647
+Enterprise Design Thinking Practitioner 01/2019
+IBM
+MCSE – Microsoft® Certified Solutions Expert: since 2019
+Data Management and Analytics 19/03/2019
+Certification Number: H071-7717
+MCSA – Microsoft® Certified Solutions Associate: SQL 2016 Database Administration (Charter*) Certification Number: H071-7382
+since 2019
+19/03/2019
+MCSA – Microsoft® Certified Solutions Associate: since 2017
+SQL 2016 Database Development 29/08/2017
+Certification Number: G341-6932
+MCP – Microsoft® Certified Professional Certification Number: F596-2766
+since 2016
+Training
+Data Engineering on GCP Specialization Coursera
+Big Data for DBA's and Dev's on Microsoft Azure Instructor Luan Moreno – Microsoft MVP
+07/2019
+07/2018
+SQL Server with NO WAIT (Performance Tuning) Instructor Fabiano Amorim – Microsoft MVP
+Explore the Cloud – Working with Azure SQL Database Instructor Vitor Fava – Microsoft MVP
+Mastering your SQL Server environment Instructor Vitor Fava – Microsoft MVP
+02/2017
+05/2017
+08/2017
+Education
+Qualification
+MBA in Software Engineer (MBA Engenharia de Software)
+Faculdade de Informática e Administração Paulista – FIAP – Brazil
+Bachelor of Computer Information Systems (Bacharel em Sistemas de Informação)
+Faculdade Impacta de Tecnologia – FIT
+2012 – 2013
+2004 – 2007
+Electronic Technician 2001 – 2002
+(Técnico em Eletrônica)
+Escola Técnica Estadual Guaracy Silveira – Centro Paula Souza
+Languages
+Portuguese (First Language)
+English (Pre-Advanced)

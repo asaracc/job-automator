@@ -1,0 +1,10 @@
+# AI & Environment
+google-genai          # The new official Google Gemini SDK
+python-dotenv         # To load your .env variables (API keys)
+
+# Document Processing
+markdown              # To convert MD text into HTML for the PDF
+playwright            # The browser engine used to "print" the PDF
+
+# Scraping (For the next step)
+# playwright is already listed above and will handle this
