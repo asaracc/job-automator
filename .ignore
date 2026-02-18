@@ -1,0 +1,22 @@
+# Ambientes Virtuais (Venv)
+venv/
+.venv/
+env/
+ENV/
+
+# Cache do Python e Compilação
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribuição / Pacotes
+dist/
+build/
+*.egg-info/
+
+# Variáveis de Ambiente (Segurança!)
+.env
+
+# IDEs (VS Code e PyCharm)
+.vscode/
+.idea/

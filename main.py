@@ -1,28 +1,30 @@
 # Main Module: Orchestrates the scraping and AI workflow
 from ai.writer import AIWriter
 from core.file_manager import JobFileManager
-from scrapers.linkedin import LinkedInScraper # Import the fake scraper
+from scrapers.factory import ScraperFactory # Importa a Fábrica
 
 
 def main():
     writer = AIWriter()
     manager = JobFileManager()
-    scraper = LinkedInScraper() # Initialize scraper
 
-    # Now you just provide a fake URL
-    job_url = "https://www.linkedin.com/jobs/fake-test"
+    # Agora você só cola o Link!
+    url = input("Cole o link da vaga do LinkedIn: ")
 
     try:
-        print("🔍 Fetching job details...")
-        job_data = scraper.get_job_data(job_url)
+        # A Fábrica decide qual scraper usar
+        scraper = ScraperFactory.get_scraper(url)
+        job_data = scraper.get_job_data(url)
 
-        print(f"🚀 Processing application for {job_data['title']} at {job_data['company']}...")
+        print(f"🚀 IA processando para {job_data['title']} na {job_data['company']}...")
         results = writer.process_application(job_data['description'], job_data['title'], job_data['company'])
-        
+
         manager.save_all(job_data, results)
-        print("✅ Everything saved: Markdown, JSON, and PDF!")
+        print("✅ Processo concluído com sucesso!")
+
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"❌ Falha no processo: {e}")
+
 
 if __name__ == "__main__":
     main()
