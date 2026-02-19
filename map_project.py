@@ -7,8 +7,17 @@ def generate_map():
     # --- Configuration ---
     root_dir_name = os.path.basename(os.getcwd())
     # Folders to ignore for a clean map
-    ignore = {'.git', '__pycache__', 'zzz_output', '.venv', 'venv', '.vscode', 'assets'}
-    
+    ignore = {
+        '.git',
+        '__pycache__',
+        'zzz_output',
+        '.venv',
+        'venv',
+        '.vscode',
+        'assets',
+        'playwright_data'
+    }
+
     raw_structure = []
     max_label_length = 0
 
@@ -17,7 +26,7 @@ def generate_map():
         dirs[:] = [d for d in dirs if d not in ignore]
         rel_path = os.path.relpath(root, '.')
         level = 0 if rel_path == '.' else rel_path.count(os.sep) + 1
-        
+
         # Directory Label
         folder_display = f"{os.path.basename(root)}/" if rel_path != '.' else f"{root_dir_name}/"
         indent = "│   " * (level - 1) + ("├── " if level > 0 else "")
@@ -30,7 +39,7 @@ def generate_map():
         for f in sorted(files):
             if f.endswith(('.pyc', '.pyo')) or f in ['map_project.py', 'setup_project.py']:
                 continue
-            
+
             file_path = os.path.join(root, f)
             comment = ""
             try:
@@ -38,7 +47,8 @@ def generate_map():
                     first_line = src.readline().strip()
                     if first_line.startswith(('#', '//')):
                         comment = first_line.lstrip('#/ ').strip()
-            except:
+            except (IOError, OSError, UnicodeDecodeError):
+                # Capturamos apenas erros de arquivo ou leitura
                 pass
 
             file_label = f"{sub_indent}{f}"
@@ -62,7 +72,7 @@ def generate_map():
 def update_readme_section(tree_content):
     file_path = "README.md"
     section_header = "## Project Map"
-    
+
     # We define exactly what the block looks like
     new_section_block = f"{section_header}\n\n```text\n{tree_content}\n```"
 
@@ -71,7 +81,7 @@ def update_readme_section(tree_content):
             content = f.read()
 
         # Regex logic:
-        # Search for '## Project Map' and capture everything after it 
+        # Search for '## Project Map' and capture everything after it
         # until the end of the file OR until another section starts (if any)
         pattern = r"## Project Map.*?(?=\n## |$)"
 
