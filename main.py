@@ -1,5 +1,4 @@
 # Main Module: Orchestrates the scraping and AI workflow
-import sys
 from concurrent.futures import ThreadPoolExecutor
 from ai.writer import AIWriter
 from core.file_manager import JobFileManager
@@ -41,18 +40,18 @@ def main():
 
                 # 4. EXCUÇÃO ISOLADA: Enviamos a tarefa para o executor
                 future = executor.submit(
-                    writer.process_application, 
-                    job_data['description'], 
-                    job_data['title'], 
+                    writer.process_application,
+                    job_data['description'],
+                    job_data['title'],
                     job_data['company']
                 )
 
                 # O .result() aguarda a IA terminar sem travar o loop do Playwright
-                results = future.result() 
+                results = future.result()
 
                 # 5. Salvamento dos arquivos
                 manager.save_all(job_data, results)
-                print(f"   ✅ Sucesso! Arquivos salvos para esta vaga.")
+                print("   ✅ Sucesso! Arquivos salvos para esta vaga.")
 
             except Exception as e:
                 print(f"   ❌ Erro ao processar esta vaga com a IA: {e}")

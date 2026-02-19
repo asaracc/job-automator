@@ -2,9 +2,10 @@
 # core/file_manager.py
 import os
 import json
-import re # Importado para limpar nomes de pastas
+import re  # Importado para limpar nomes de pastas
 from datetime import datetime
 from core.pdf_generator import PDFGenerator
+
 
 class JobFileManager:
     def __init__(self, base_path="zzz_output"):
@@ -17,7 +18,7 @@ class JobFileManager:
         raw_name = f"{job_data['company']} - {job_data['title']} - {date_str}"
         # Remove caracteres como / \ : * ? " < > |
         clean_folder_name = re.sub(r'[\\/*?:"<>|]', "", raw_name)
-        
+
         path = os.path.join(self.base_path, clean_folder_name)
         os.makedirs(path, exist_ok=True)
 
@@ -30,11 +31,11 @@ class JobFileManager:
         self._write(path, "1_job_description.md", job_data.get('description', ""))
         self._write(path, "2_tailored_resume.md", resume_md)
         self._write(path, "3_cover_letter.md", cover_letter_md)
-        
+
         # Relatório de Análise
         scores = ai_res.get('scores', {})
         analysis = ai_res.get('analysis', {})
-        
+
         report = f"# Analysis: {job_data['title']}\n\n"
         report += f"Score: {scores.get('original', 0)} -> {scores.get('tailored', 0)}\n\n"
         report += f"### Fit Analysis\n{analysis.get('fit_report', '')}\n\n"
@@ -58,7 +59,7 @@ class JobFileManager:
                 "country": metadata.get('country'),
                 "work_model": metadata.get('work_model'),
                 "benefits": metadata.get('benefits'),
-                "url": job_data.get('url') # Útil guardar a URL original
+                "url": job_data.get('url')  # Útil guardar a URL original
             },
             "evaluation": {
                 "original_score": scores.get('original'),

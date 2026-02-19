@@ -17,13 +17,14 @@ STRICT RULES FOR RESUME REWRITE:
 
 FACT INTEGRITY RULES:
 1. DO NOT INVENT ROLES: Use exactly the job titles and companies provided in the resume.
-2. DO NOT FABRICATE DATA: You may rephrase descriptions to highlight relevant skills, but you cannot claim the user did something they haven't.
+2. DO NOT FABRICATE DATA: You may rephrase descriptions to highlight relevant skills, but you cannot claim the user did
+something they haven't.
 3. KEEP FULL HISTORY: All 15+ years must be present.
 
 SCORING RUBRIC:
 - 10/10: Only if they meet 100% of 'Required' and 'Preferred' skills.
 - 7/10: Meets all 'Required' but missing 'Preferred'.
-- 5/10: Missing key 'Required' skills. 
+- 5/10: Missing key 'Required' skills.
 - BE HONEST: If skills are missing, the score MUST reflect that.
 
 TASKS:

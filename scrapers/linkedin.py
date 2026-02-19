@@ -20,7 +20,7 @@ class LinkedInScraper:
             browser = p.chromium.launch_persistent_context(
                 user_data_dir,
                 headless=False,
-                slow_mo=600, # Velocidade humana para evitar detecção
+                slow_mo=600,  # Velocidade humana para evitar detecção
                 args=["--start-maximized"]
             )
 
@@ -43,7 +43,7 @@ class LinkedInScraper:
                 # Tenta localizar o container da lista para fazer o scroll nele
                 list_container = page.locator(self.selectors["container_esquerda"])
                 if list_container.count() > 0:
-                    for _ in range(5): # Faz scroll 5 vezes para baixo
+                    for _ in range(5):  # Faz scroll 5 vezes para baixo
                         list_container.evaluate("node => node.scrollTop += 1000")
                         time.sleep(1)
             except Exception as e:
@@ -63,7 +63,7 @@ class LinkedInScraper:
                     # Clica no card para abrir o detalhe na direita
                     card.scroll_into_view_if_needed()
                     card.click()
-                    time.sleep(2) # Espera carregar o painel da direita
+                    time.sleep(2)  # Espera carregar o painel da direita
 
                     # Extração dos dados
                     data = {
@@ -77,7 +77,7 @@ class LinkedInScraper:
                     if not data["description"] or data["description"] == "Não encontrado":
                         data["description"] = self._get_text(page, ".jobs-box__group")
 
-                    yield data # Envia para o main.py processar com a IA
+                    yield data  # Envia para o main.py processar com a IA
 
                 except Exception as e:
                     print(f"   ⚠️ Erro ao clicar na vaga {i+1}: {e}")
@@ -94,5 +94,8 @@ class LinkedInScraper:
                 # Limpeza básica de excesso de espaços e quebras
                 return element.inner_text().strip()
             return "Não encontrado"
-        except:
+        except Exception as e:
+            # Capturamos exceções genéricas de software,
+            # mas permitimos que sinais do sistema (Ctrl+C) passem.
+            print(f"⚠️ Aviso: Falha ao ler seletor {selector}: {e}")
             return "Não encontrado"

@@ -50,9 +50,9 @@ class AIWriter:
 
             # Executa a chamada em uma thread segura para o asyncio
             response = loop.run_until_complete(asyncio.to_thread(call_gemini))
-            
+
             clean_text = response.text.strip()
-            
+
             # Limpeza de blocos Markdown (```json ...)
             if clean_text.startswith("```"):
                 clean_text = clean_text.split("json")[-1].split("```")[0].strip()
@@ -66,4 +66,4 @@ class AIWriter:
             print(f"⚠️ AI Generation Error: {e}")
             raise e
         finally:
-            loop.close() # Sempre fecha o loop local
+            loop.close()  # Sempre fecha o loop local

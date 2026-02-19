@@ -5,6 +5,7 @@ import re
 from markdown import markdown
 from xhtml2pdf import pisa
 
+
 class PDFGenerator:
     def __init__(self):
         self.user_name = os.getenv("USER_FULL_NAME", "Candidato")
