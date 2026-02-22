@@ -1,5 +1,6 @@
 # Create PDF from Resume Markdown file
 # core/pdf_generator.py
+# core/pdf_generator.py
 import os
 import re
 from markdown import markdown
@@ -16,11 +17,10 @@ class PDFGenerator:
         filename = f"{self.user_name}_{clean_title}.pdf"
         final_pdf_path = os.path.join(output_path, filename)
 
-        # 2. Converter Markdown para HTML Puro
-        # O extra 'smarty' ajuda com aspas e hífens especiais
+        # 2. Converter Markdown para HTML
         html_body = markdown(md_content, extensions=['extra', 'smarty'])
 
-        # 3. Criar o HTML completo com CSS para ficar bonito
+        # 3. HTML completo (SEM o bloco centralizado duplicado)
         full_html = f"""
         <html>
         <head>
@@ -36,38 +36,43 @@ class PDFGenerator:
                     line-height: 1.4;
                     color: #333;
                 }}
-                h1, h2, h3 {{
+                h1 {{
+                    color: #2c3e50;
+                    font-size: 18pt;
+                    margin-bottom: 5pt;
+                    text-align: left; /* Alinha com o padrão do MD */
+                }}
+                h3 {{
                     color: #2c3e50;
                     margin-top: 15pt;
                     border-bottom: 1px solid #eee;
+                    font-size: 12pt;
                 }}
                 b, strong {{
                     color: #000;
                 }}
                 ul {{
-                    margin-left: 0;
                     padding-left: 15pt;
                 }}
                 li {{
                     margin-bottom: 4pt;
                 }}
+                p {{
+                    margin-bottom: 8pt;
+                }}
             </style>
         </head>
         <body>
-            <div style="text-align: center;">
-                <h1 style="border: none; margin-bottom: 0;">{self.user_name}</h1>
-                <p style="margin-top: 0; font-style: italic;">{job_title}</p>
-            </div>
             {html_body}
         </body>
         </html>
         """
 
-        # 4. Gerar o PDF a partir do HTML
+        # 4. Gerar o PDF
         with open(final_pdf_path, "wb") as result_file:
             pisa_status = pisa.CreatePDF(full_html, dest=result_file)
 
         if pisa_status.err:
-            raise Exception(f"Erro ao gerar PDF via xhtml2pdf: {pisa_status.err}")
+            raise Exception(f"Erro ao gerar PDF: {pisa_status.err}")
 
         return final_pdf_path
