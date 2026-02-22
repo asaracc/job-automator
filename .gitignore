@@ -161,3 +161,6 @@ cython_debug/
 .canada_lmia_venv
 
 playwright_data/
+zzz_output/
+*.playwright
+*.pyc
