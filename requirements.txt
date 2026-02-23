@@ -1,5 +1,6 @@
-google-genai
-python-dotenv
-markdown
-playwright
-xhtml2pdf
+google-genai==1.63.0
+python-dotenv==1.2.1
+Markdown==3.10.2
+playwright==1.58.0
+xhtml2pdf==0.2.17
+pandas==3.0.1

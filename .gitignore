@@ -164,3 +164,4 @@ playwright_data/
 zzz_output/
 *.playwright
 *.pyc
+applications_master_log.csv
