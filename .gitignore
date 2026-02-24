@@ -163,5 +163,17 @@ cython_debug/
 playwright_data/
 zzz_output/
 *.playwright
+
+# Python bytecode
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
+*/__pycache__/*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
 applications_master_log.csv
