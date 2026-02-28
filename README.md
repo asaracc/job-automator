@@ -91,9 +91,9 @@ bash
 Even if you drop the `zzz_output` all your data still in the CSV file.
 
 # 🏗️ Roadmap PaaS
-[ ] Rebuild System: Script para reconstruir pastas e PDFs a partir do CSV.
+[ ] Rebuild System: Create the folders and files using the CSV as a source instead of GenAI
 
-[ ] Web Dashboard: Interface web para visualizar o CSV Master.
+[ ] Web Dashboard: To
 
 [ ] PostgreSQL Sync: Migração do CSV para banco de dados relacional.
 
