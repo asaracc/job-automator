@@ -29,7 +29,10 @@ Create the `.env` file in the root folder.
 
 Code Snippet
 
-        GEMINI_API_KEY=sua_chave_aqui
+        GEMINI_API_KEY="
+        API_KEY_1,
+        API_KEY_2
+        "
         GEMINI_MODEL_NAME=gemini-2.0-flash
         USER_FULL_NAME="Seu Nome Completo"
 
@@ -55,7 +58,7 @@ If you edit the Markdown files (.md) in one folder and need to update the PDF, t
 
 Bash
 
-        python sync_utils.py zzz_output/"Nome_Da_Pasta_Da_Vaga"
+        python sync_utils.py zzz_output/"CompanyName - Job Role - Date"
 
 # 📂 Output Structure (zzz_output)
 
@@ -69,7 +72,7 @@ Each Job creates one folder containing the folloing files:
 
 - 3_cover_letter.md / .pdf: Personalized Cover letter.
 
-- metadata.json: All data in a structured file ready to be inserted if needed.
+- metadata.json: All data in a structured file ready to be inserted in a Database in the future.
 
 # 📊 Data Repository (Master Log)
 
@@ -79,7 +82,7 @@ The file `applications_master_log.csv` is the local master data. It's storage al
 
 bash
 
-        tree
+        tree --gitignore
 
 
 
