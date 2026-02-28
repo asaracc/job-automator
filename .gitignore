@@ -176,4 +176,4 @@ build/
 dist/
 *.egg-info/
 
-applications_master_log.csv
+applications_master_log*

@@ -1,4 +1,9 @@
-# core/file_manager.py
+"""
+core/file_manager.py
+Handles the creation of directories and persistence of job application data.
+Integrates job_hash for deterministic tracking and prevents duplicate processing.
+"""
+
 import os
 import json
 import re
@@ -11,23 +16,29 @@ class JobFileManager:
     def __init__(self, base_path="zzz_output"):
         self.base_path = base_path
         self.pdf_gen = PDFGenerator()
-        # O CSV fica na raiz do projeto, fora da pasta de output para segurança
+        # The CSV remains in the project root for safety and easy access
         self.master_csv_path = "applications_master_log.csv"
 
-    def save_all(self, job_data, ai_res):
-        # 1. Setup de Pastas
+    def save_all(self, job_data, ai_res, job_hash):
+        """
+        Saves all job-related files, generates PDFs, and updates the Master CSV.
+        Now requires job_hash to ensure unique identification.
+        """
+        # 1. Folder Setup (YYYYMMDD-Company-Title-HashShort)
         date_str = datetime.now().strftime("%Y%m%d")
-        raw_name = f"{job_data['company']} - {job_data['title']} - {date_str}"
-        clean_folder_name = re.sub(r'[\\/*?:"<>|]', "", raw_name)
-        path = os.path.join(self.base_path, clean_folder_name)
+        clean_company = re.sub(r'[\\/*?:"<>|]', "", job_data['company']).replace(' ', '_')
+        clean_job_title = re.sub(r'[\\/*?:"<>|]', "", job_data['title']).replace(' ', '_')
+
+        folder_name = f"{date_str}-{clean_company}-{clean_job_title}-{job_hash[:8]}"
+        path = os.path.join(self.base_path, folder_name)
         os.makedirs(path, exist_ok=True)
 
-        # 2. Extração de Dados
+        # 2. Data Extraction
         files_data = ai_res.get('files', {})
         resume_md = files_data.get('tailored_resume_md', "")
         cover_letter_md = files_data.get('cover_letter_md', "")
 
-        # 3. Salvar Arquivos Físicos (Markdown)
+        # 3. Save Physical Markdown Files
         self._write(path, "1_job_description.md", job_data.get('description', ""))
         self._write(path, "2_tailored_resume.md", resume_md)
         self._write(path, "3_cover_letter.md", cover_letter_md)
@@ -35,29 +46,26 @@ class JobFileManager:
         report = self._build_human_report(job_data, ai_res)
         self._write(path, "0_analysis_report.md", report)
 
-        # 4. Geração de PDFs (NOVO: Resume e Cover Letter)
+        # 4. PDF Generation
         try:
-            print(f"   📄 Gerando PDFs para {job_data['title']}...")
-            # Gera o PDF do Currículo
+            print(f"   📄 Generating PDFs for {job_data['title']}...")
             self.pdf_gen.convert_resume(resume_md, f"Resume_{job_data['title']}", path)
-            # Gera o PDF da Carta de Apresentação
             self.pdf_gen.convert_resume(cover_letter_md, f"CoverLetter_{job_data['title']}", path)
         except Exception as e:
-            print(f"   ⚠️ Erro PDF: {e}")
+            print(f"   ⚠️ PDF Error: {e}")
 
-        # 5. Gerar o JSON
-        full_metadata = self._build_metadata_dict(job_data, ai_res)
+        # 5. Build and Save Metadata JSON (FIXED: Now passes and uses job_hash)
+        full_metadata = self._build_metadata_dict(job_data, ai_res, job_hash)
         with open(os.path.join(path, "metadata.json"), "w", encoding="utf-8") as f:
             json.dump(full_metadata, f, indent=4, ensure_ascii=False)
 
-        # 6. Atualizar CSV Master
+        # 6. Update Master CSV
         self._update_master_csv(full_metadata)
 
     def _update_master_csv(self, data):
-        # Flattening do dicionário para colunas de CSV
-        # Incluímos colunas de controle de status que você pediu
+        """Flattens metadata dictionary for CSV row appending."""
         row = {
-            "app_id": data["application_meta"]["id"],
+            "job_hash": data["application_meta"]["job_hash"],
             "date_generated": data["application_meta"]["timestamp"],
             "company": data["job_info"]["company"],
             "title": data["job_info"]["title"],
@@ -68,13 +76,12 @@ class JobFileManager:
             "url": data["job_info"]["url"],
             "original_score": data["evaluation"]["original_score"],
             "tailored_score": data["evaluation"]["tailored_score"],
-            "gaps": "|".join(data["evaluation"]["gaps"]), # Pipe separator para lista
+            "gaps": "|".join(data["evaluation"]["gaps"]),
             "mitigation_strategy": data["evaluation"]["mitigation_strategy"],
-            "resume_content_md": data["generated_content"]["resume_markdown"], # Backup do currículo
+            "resume_content_md": data["generated_content"]["resume_markdown"],
             "cover_letter_md": data["generated_content"]["cover_letter_markdown"],
             "job_description_raw": data["generated_content"]["job_description_raw"],
-            # COLUNAS DE CONTROLE (Status da Aplicação)
-            "status": "Generated", # default
+            "status": "Generated",
             "applied_date": "", 
             "contact_person": "",
             "interview_date": "",
@@ -83,20 +90,23 @@ class JobFileManager:
         }
 
         file_exists = os.path.isfile(self.master_csv_path)
-        
         with open(self.master_csv_path, mode='a', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=row.keys())
             if not file_exists:
                 writer.writeheader()
             writer.writerow(row)
-        print(f"   📊 Vaga registrada no Master CSV: {self.master_csv_path}")
 
-    def _build_metadata_dict(self, job_data, ai_res):
-        # Reaproveitando a estrutura JSON que já tínhamos
+        print(f"   📊 Job registered in Master CSV with Hash: {row['job_hash'][:8]}")
+
+    def _build_metadata_dict(self, job_data, ai_res, job_hash):
+        """
+        FIXED: Added job_hash parameter and replaced legacy 'id'.
+        This matches the structure expected by sync_utils.py.
+        """
         metadata_ai = ai_res.get('metadata', {})
         return {
             "application_meta": {
-                "id": f"app_{int(datetime.now().timestamp())}",
+                "job_hash": job_hash,
                 "timestamp": datetime.now().isoformat()
             },
             "job_info": {
@@ -124,15 +134,25 @@ class JobFileManager:
         }
 
     def _build_human_report(self, job_data, ai_res):
+        """
+        Generates a readable Markdown report summarizing the AI analysis 
+        of the job application and the candidate's fit.
+        """
         scores = ai_res.get('scores', {})
         analysis = ai_res.get('analysis', {})
         metadata_ai = ai_res.get('metadata', {})
-        report = f"# 📊 Análise de Candidatura: {job_data['title']}\n\n"
-        report += f"**Match Score:** {scores.get('original', 0)} → **Otimizado:** {scores.get('tailored', 0)}\n\n"
-        report += f"## 🛠️ Como Aplicar\n{metadata_ai.get('apply_instructions', 'Verificar link.')}\n\n"
-        report += f"### 🧐 Análise de Fit\n{analysis.get('fit_report', '')}\n\n"
-        report += "### ⚠️ Gaps\n- " + "\n- ".join(analysis.get('gaps', [])) + "\n\n"
-        report += f"### 💡 Mitigação\n{analysis.get('mitigation_strategy', '')}\n"
+        report = f"# 📊 Application Analysis: {job_data['title']}\n\n"
+        # Match Score comparison
+        report += f"**Match Score:** {scores.get('original', 0)} → **Optimized:** {scores.get('tailored', 0)}\n\n"
+        # Application Instructions
+        report += f"## 🛠️ How to Apply\n{metadata_ai.get('apply_instructions', 'Verify application link.')}\n\n"
+        # Fit Analysis section
+        report += f"### 🧐 Fit Analysis\n{analysis.get('fit_report', '')}\n\n"
+        # Gaps / Missing Requirements
+        report += "### ⚠️ Gaps & Missing Skills\n- " + "\n- ".join(analysis.get('gaps', [])) + "\n\n"
+        # Strategy for overcoming gaps
+        report += f"### 💡 Mitigation Strategy\n{analysis.get('mitigation_strategy', '')}\n"
+
         return report
 
     def _write(self, path, filename, content):

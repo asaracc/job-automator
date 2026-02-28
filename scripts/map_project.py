@@ -1,4 +1,10 @@
-# Map Project: Generates a visual tree and updates the 'Project Map' section in place
+"""
+scripts/map_project.py
+Utility to generate a visual map of the project structure.
+This script walks through the project directory, captures the folder/file hierarchy, and extracts
+comments from the first line of code files to create an annotated tree view.
+The output is then injected into the README.md under a specific section for easy reference.
+"""
 import os
 import re
 

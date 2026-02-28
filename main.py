@@ -1,72 +1,112 @@
-# Main Module: Orchestrates the scraping and AI workflow
+"""
+main.py
+Main Module: Orchestrates the scraping and AI workflow.
+Integrates SHA-256 hashing to prevent duplicate job processing.
+"""
+
 from concurrent.futures import ThreadPoolExecutor
 from ai.writer import AIWriter
 from core.file_manager import JobFileManager
 from scrapers.linkedin import LinkedInScraper
+from core.utils import generate_job_hash
+import pandas as pd
+import os
+
+MASTER_CSV = "applications_master_log.csv"
+
+
+def is_already_processed(job_hash):
+    """
+    Checks the Master CSV to prevent redundant AI processing.
+    Cleans column names to ensure 'job_hash' is found correctly.
+    """
+    if not os.path.exists(MASTER_CSV):
+        return False
+    try:
+        # Read only the 'job_hash' column to save memory
+        df = pd.read_csv(MASTER_CSV, usecols=['job_hash'])
+        # Clean potential whitespace from the data and check existence
+        return job_hash in df['job_hash'].values
+    except ValueError:
+        # This happens if 'job_hash' column doesn't exist yet
+        print(f"⚠️  Warning: 'job_hash' column not found in {MASTER_CSV}.")
+        return False
+    except Exception as e:
+        print(f"⚠️  Error reading Master Log: {e}")
+        return False
 
 
 def main():
-    # 1. Inicialização dos componentes
+    # 1. Component Initialization
     writer = AIWriter()
     manager = JobFileManager()
     scraper = LinkedInScraper()
 
-    # Este executor é o segredo: ele isola a IA em uma thread separada
-    # resolvendo o erro de "asyncio loop"
+    # The executor isolates AI tasks in a separate thread to solve asyncio loop conflicts
     executor = ThreadPoolExecutor(max_workers=1)
 
-    print("🚀 Gerador de Candidaturas Automático iniciado.")
+    print("🚀 Automatic Application Generator started.")
 
-    # 2. Entrada da URL de busca do LinkedIn
-    search_url = input("Cole a URL da sua busca filtrada do LinkedIn: ").strip()
+    # 2. LinkedIn Search URL Input
+    search_url = input("Paste your LinkedIn filtered search URL: ").strip()
 
     if not search_url:
-        print("❌ URL inválida.")
+        print("❌ Invalid URL.")
         return
 
     try:
-        # 3. Início do Loop de Scraping
-        # O scraper vai pausar para você logar e depois começar a 'yield' os dados
-        for job_data in scraper.scrape_search_results(search_url):
+        # 3. Scraping Loop Start
+        # The scraper yields job_data dynamically
+        for i, job_data in enumerate(scraper.scrape_search_results(search_url), 1):
+            # 1. Capture basic info
+            title = job_data.get('title', 'unknown')
+            company = job_data.get('company', 'unknown')
+            description = job_data.get('description', '')
 
-            if not job_data.get('description') or job_data['description'] == "Não encontrado":
-                print(f"⏭️ Pulando '{job_data['title']}': Descrição vazia.")
+            # 2. Skip if description is empty or failed (English match)
+            if not description or description == "unknown":
+                print(f"  ⏭️  [SKIP] '{title}': Description not found.")
                 continue
 
-            print(f"\n[Processando] {job_data['title']} @ {job_data['company']}")
+            # 3. Generate unique hash
+            job_hash = generate_job_hash(company, title, description)
+
+            # 2. Check if already handled
+            if is_already_processed(job_hash):
+                print(f". ✅ [ALREADY PROCESSED] {title} @ {company} ({job_hash[:8]})")
+                continue
+
+            # 3. Process new job with visual separation
+            print("\n" + "─"*50)
+            print(f"🚀 [JOB {i}] {title.upper()}")
+            print(f"🏢 COMPANY: {company}")
+            print(f"🆔 HASH:    {job_hash[:8]}")
+            print("─"*50)
 
             try:
-                print("   🤖 IA está analisando e gerando documentos (em thread isolada)...")
-
-                # 4. EXCUÇÃO ISOLADA: Enviamos a tarefa para o executor
-                future = executor.submit(
-                    writer.process_application,
-                    job_data['description'],
-                    job_data['title'],
-                    job_data['company']
-                )
-
-                # O .result() aguarda a IA terminar sem travar o loop do Playwright
+                print("   🤖 AI Analysis in progress...")
+                future = executor.submit(writer.process_application, description, title, company)
                 results = future.result()
 
-                # 5. Salvamento dos arquivos
-                manager.save_all(job_data, results)
-                print("   ✅ Sucesso! Arquivos salvos para esta vaga.")
+                print("   📄 Exporting Files & PDFs...")
+                manager.save_all(job_data, results, job_hash)
+
+                print(f"   ✨ SUCCESS: Application generated for {company}")
 
             except Exception as e:
-                print(f"   ❌ Erro ao processar esta vaga com a IA: {e}")
+                print(f"   ❌ ERROR: {e}")
                 continue
 
         print("\n" + "="*50)
-        print("🏁 Maratona concluída com sucesso!")
+        print("🏁 Operation completed successfully!")
         print("="*50)
 
     except KeyboardInterrupt:
-        print("\n\n👋 Interrompido pelo usuário.")
+        print("\n\n👋 Interrupted by user.")
     except Exception as e:
-        print(f"\n❌ Falha crítica no sistema: {e}")
+        print(f"\n❌ Critical system failure: {e}")
     finally:
-        # Fecha o executor de threads de forma limpa
+        # Cleanly shutdown the thread executor
         executor.shutdown(wait=True)
 
 

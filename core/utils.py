@@ -1,13 +1,21 @@
+"""
+core/utils.py
+Centralized utilities for the Job Application Automator.
+Contains the primary hashing logic used for deduplication across the project.
+"""
+
 import hashlib
 
 
 def generate_job_hash(company, job_title, job_description):
     """
-    Gera um ID único baseado nas informações da vaga.
-    Remove espaços e converte para minúsculas para evitar variações bobas.
+    Generates a unique SHA-256 hash for a job posting.
+    Standardizes inputs to ensure the hash is deterministic and consistent.
     """
-    # 1. Normalizamos os dados para que "Google" e "google" gerem o mesmo ID
-    raw_string = f"{company.lower()}|{job_title.lower()}|{job_description.strip()}"
+    # Force string conversion and normalization
+    c = str(company).lower().strip()
+    t = str(job_title).lower().strip()
+    d = str(job_description).lower().strip()
 
-    # 2. Geramos o hash SHA-256
-    return hashlib.sha256(raw_string.encode('utf-8')).hexdigest()
+    data_to_hash = f"{c}|{t}|{d}"
+    return hashlib.sha256(data_to_hash.encode('utf-8')).hexdigest()
