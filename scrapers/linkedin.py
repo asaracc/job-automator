@@ -5,6 +5,7 @@ Handles session persistence, lazy loading, and data mapping.
 """
 
 import time
+import random
 from playwright.sync_api import sync_playwright
 
 
@@ -17,92 +18,80 @@ class LinkedInScraper:
     """
 
     def __init__(self):
-        """Initializes the scraper with updated 2026 CSS selectors."""
         self.selectors = {
             "job_card": ".scaffold-layout__list-item",
             "title": ".job-details-jobs-unified-top-card__job-title",
             "company": ".job-details-jobs-unified-top-card__company-name",
             "description": ".jobs-description__content",
-            "left_container": ".jobs-search-results-list"
+            "left_container": ".jobs-search-results-list",
+            "no_results": ".jobs-search-two-pane__no-results-banner"
         }
 
-    def scrape_search_results(self, search_url):
+    def scrape_search_results(self, base_url, max_pages=3):
         """
-        Navigates to the search URL and yields job data dictionaries.
-
-        Args:
-            search_url (str): The filtered LinkedIn job search URL.
-
-        Yields:
-            dict: Contains 'title', 'company', 'description', and 'url'.
+        Automated multi-page scraper. 
+        No manual input required—uses the URL provided by the Search Matrix.
         """
         with sync_playwright() as p:
-            # Persistent context saves login cookies in ./playwright_data
             user_data_dir = "./playwright_data"
             browser = p.chromium.launch_persistent_context(
                 user_data_dir,
-                headless=False,
-                slow_mo=600,
+                headless=False,  # Set to True once you know it's working
+                slow_mo=500,
                 args=["--start-maximized"]
             )
 
             page = browser.pages[0]
-            page.goto(search_url)
 
-            print("\n" + "=" * 60)
-            print("🛠️  MANUAL PREPARATION MODE")
-            print("1. Log in if required.")
-            print("2. Apply your FILTERS now (Level, Date, Remote, etc.).")
-            print("3. Once the list is correct, return to this terminal.")
-            print("=" * 60 + "\n")
+            for current_page in range(max_pages):
+                offset = current_page * 25
+                # Ensures the URL has the correct starting point for pagination
+                paginated_url = f"{base_url}&start={offset}"
+                
+                print(f"      📂 [PAGE {current_page + 1}] Accessing: {paginated_url}")
+                page.goto(paginated_url, wait_until="domcontentloaded")
+                
+                # Check if LinkedIn shows 'No results'
+                if page.locator(self.selectors["no_results"]).is_visible():
+                    print("      🏁 End of results reached.")
+                    break
 
-            input(">>> Filters adjusted? Press ENTER to start extraction...")
-
-            # --- Step 1: Handle Lazy Loading ---
-            print("\n⏳ Loading all jobs from the sidebar...")
-            try:
-                list_container = page.locator(self.selectors["left_container"])
-                if list_container.count() > 0:
-                    for _ in range(5):
-                        list_container.evaluate("node => node.scrollTop += 1000")
-                        time.sleep(1)
-            except Exception as e:
-                print(f"⚠️  Scroll Warning: {e}")
-
-            # --- Step 2: Identify Job Cards ---
-            page.wait_for_selector(self.selectors["job_card"], timeout=10000)
-            cards = page.locator(self.selectors["job_card"]).all()
-
-            print(f"🎯 Found {len(cards)} jobs matching your filters.")
-
-            # --- Step 3: Extraction Loop ---
-            for i, card in enumerate(cards):
+                # Wait for the first job card to appear
                 try:
-                    print(f"   📄 Reading job {i+1}/{len(cards)}...")
-
-                    card.scroll_into_view_if_needed()
-                    card.click()
-                    time.sleep(2)  # Wait for the detail pane to update
-
-                    data = {
-                        "title": self._get_text(page, self.selectors["title"]),
-                        "company": self._get_text(page, self.selectors["company"]),
-                        "description": self._get_text(page, self.selectors["description"]),
-                        "url": page.url
-                    }
-
-                    # Fallback for dynamic description boxes
-                    if not data["description"] or data["description"] == "unknown":
-                        data["description"] = self._get_text(page, ".jobs-box__group")
-
-                    yield data
-
+                    page.wait_for_selector(self.selectors["job_card"], timeout=10000)
                 except Exception as e:
-                    print(f"   ⚠️  Error extracting job {i+1}: {e}")
-                    continue
+                    print(f"⚠️  Scroll Warning: {e}")
+                    break
 
-            print("\n✅ Page scan complete.")
+                # Human-like scrolling to load the sidebar
+                self._scroll_sidebar(page)
+                
+                cards = page.locator(self.selectors["job_card"]).all()
+                for i, card in enumerate(cards):
+                    try:
+                        card.scroll_into_view_if_needed()
+                        card.click()
+                        time.sleep(random.uniform(2, 4)) # Mimic reading time
+
+                        yield {
+                            "title": self._get_text(page, self.selectors["title"]),
+                            "company": self._get_text(page, self.selectors["company"]),
+                            "description": self._get_text(page, self.selectors["description"]),
+                            "url": page.url
+                        }
+                    except Exception as e:
+                        print(f"      ⚠️  Skip card {i+1}: {e}")
+                        continue
+
             browser.close()
+
+    def _scroll_sidebar(self, page):
+        try:
+            container = page.locator(self.selectors["left_container"])
+            for _ in range(3):
+                container.evaluate("node => node.scrollTop += 800")
+                time.sleep(0.5)
+        except: pass
 
     def _get_text(self, page, selector):
         """
@@ -117,9 +106,7 @@ class LinkedInScraper:
         """
         try:
             element = page.locator(selector).first
-            if element.is_visible():
-                return element.inner_text().strip()
-            return "Not found"
+            return element.inner_text().strip() if element.is_visible() else "Not found"
         except Exception as e:
             print(f"   ⚠️  Warning: Failed to read selector {selector}: {e}")
             return "Not found"
